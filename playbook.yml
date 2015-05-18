@@ -116,7 +116,7 @@
 
     - name: Restart marathon
       service:
-        name: mesos-master
+        name: marathon
         enabled: true
         state: restarted
 
