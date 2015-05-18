@@ -37,19 +37,22 @@
 - hosts: master
   sudo: yes
   tasks:
-    - name: Setup zookeeper master servers configuration
+    - name: Setup zookeeper server ID
       template:
         src: "templates/zk.id"
         dest: "/etc/zookeeper/conf/myid"
         owner: root
         group: root
         mode: 0644
+
+    - name: Setup zookeeper zoo.cfg
       template:
         src: "templates/zoo.cfg"
         dest: "/etc/zookeeper/conf/zoo.cfg"
         owner: root
         group: root
         mode: 0644
+
     - name: Setup quorum for mesos-master
       template:
         src: "templates/quorum"
@@ -57,27 +60,27 @@
         owner: root
         group: root
         mode: 0644
-    - name: Setup ip for mesos-master
-      template:
-        src: "templates/ip"
-        dest: "/etc/mesos-master/ip"
-        owner: root
-        group: root
-        mode: 0644
+
     - name: Setup hostname for mesos-master
       template:
-        src: "templates/ip"
-        dest: "/etc/mesos-master/ip"
+        src: "templates/hostname"
+        dest: "/etc/mesos-master/hostname"
         owner: root
         group: root
         mode: 0644
+
     - name: Create directory for marathon configuration
       file:
         path: /etc/marathon/conf
         state: directory
+
     - name: Copy mesos-master hostnames to marathon configuration
       command: cp /etc/mesos-master/hostname /etc/marathon/conf/
-    - name: Setup zookeeper configuration on marathon configuration
+
+    - name: Copy mesos-master zookeeper addresses to marathon
+      command: cp /etc/mesos/zk /etc/marathon/conf/master
+
+    - name: Setup zookeeper addresses on marathon
       template:
         src: "templates/marathon"
         dest: "/etc/marathon/conf/zk"
@@ -85,3 +88,26 @@
         group: root
         mode: 0644
 
+    - name: Stop mesos-slave jobs on master
+      service:
+        name: mesos-slave
+        state: stopped
+        enabled: false
+
+    - name: Restart zookeeper
+      service:
+        name: zookeeper
+        enabled: true
+        state: restarted
+
+    - name: Restart mesos-master
+      service:
+        name: mesos-master
+        enabled: true
+        state: restarted
+
+    - name: Restart marathon
+      service:
+        name: mesos-master
+        enabled: true
+        state: restarted
