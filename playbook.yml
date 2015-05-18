@@ -64,6 +64,14 @@
     - name: Setup hostname for mesos-master
       template:
         src: "templates/hostname"
+        dest: "/etc/mesos-master/ip"
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: Setup hostname for mesos-master
+      template:
+        src: "templates/hostname"
         dest: "/etc/mesos-master/hostname"
         owner: root
         group: root
@@ -109,5 +117,42 @@
     - name: Restart marathon
       service:
         name: mesos-master
+        enabled: true
+        state: restarted
+
+- hosts: slave
+  sudo: yes
+  tasks:
+    - name: Stop and disable zookeeper in slave nodes
+      service:
+        name: zookeeper
+        enabled: false
+        state: stopped
+
+    - name: Stop and disable mesos-master in slave nodes
+      service:
+        name: mesos-master
+        enabled: false
+        state: stopped
+
+    - name: Setup ip for mesos-slave
+      template:
+        src: "templates/hostname"
+        dest: "/etc/mesos-slave/ip"
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: Setup hostname for mesos-slave
+      template:
+        src: "templates/hostname"
+        dest: "/etc/mesos-slave/hostname"
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: Start and enable mesos-slave in slave nodes
+      service:
+        name: mesos-slave
         enabled: true
         state: restarted
