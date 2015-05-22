@@ -14,12 +14,27 @@
     - name: Update repository cache
       apt: update_cache=yes cache_valid_time=3600
 
+- hosts: slave
+  sudo: yes
+  pre_tasks:
+    - name: Add docker deb repository keys
+      apt_key: keyserver=keyserver.ubuntu.com id=A88D21E9
+
+    - name: Install docker deb repository
+      apt_repository: repo="deb http://get.docker.io/ubuntu docker main" state=present
+
+    - name: Update repository cache
+      apt: update_cache=yes cache_valid_time=3600
+
 - hosts: master
   sudo: yes
   handlers:
     - include: handlers/handlers.yml
   tasks:
     - include: tasks/master.yml
+      vars:
+        quorum: 2
+        task_launch_timeout: 300000
 
 - hosts: slave
   sudo: yes
@@ -27,6 +42,8 @@
     - include: handlers/handlers.yml
   tasks:
     - include: tasks/slave.yml
+      vars:
+        mesos_slave_containerizers: docker,mesos
 
 - hosts: multi
   sudo: yes

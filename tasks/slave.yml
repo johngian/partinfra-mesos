@@ -3,6 +3,9 @@
 - name: Install mesos
   apt: name=mesos state=present
 
+- name: Install docker
+  apt: name=lxc-docker state=present
+
 - name: Stop and disable zookeeper in slave nodes
   service:
     name: zookeeper
@@ -27,6 +30,22 @@
   template:
     src: "templates/hostname"
     dest: "/etc/mesos-slave/hostname"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Enable docker containerizer
+  template:
+    src: "templates/containerizers"
+    dest: "/etc/mesos-slave/containerizers"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Increase mesos-slave executor timeout (delay when pulling docker slave)
+  template:
+    src: "templates/executor_registration_timeout"
+    dest: "/etc/mesos-slave/executor_registration_timeout"
     owner: root
     group: root
     mode: 0644
