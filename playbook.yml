@@ -1,158 +1,23 @@
 ---
-- hosts: multi
-  sudo: yes
+# file: Top level playbook, playbook.yml
+
+# Start of the playbook after the minus sign
+-
+  pre_tasks:
+    - hosts: multi
+      sudo: yes
+      tasks:
+      - name: Add mesosphere deb repository keys
+        apt_key: keyserver=keyserver.ubuntu.com id=E56151BF
+
+      - name: Install mesosphere deb repository
+        apt_repository: repo="deb http://repos.mesosphere.io/ubuntu trusty main" state=present
+
+      - name: Update repository cache
+        apt: update_cache=yes cache_valid_time=3600
+          include: tasks/common.yml
+
   tasks:
-  - name: Add mesosphere deb repository keys
-    apt_key: keyserver=keyserver.ubuntu.com id=E56151BF
-
-  - name: Install mesosphere deb repository
-    apt_repository: repo="deb http://repos.mesosphere.io/ubuntu trusty main" state=present
-
-  - name: Update repository cache
-    apt: update_cache=yes cache_valid_time=3600
-
-- hosts: master
-  sudo: yes
-  tasks:
-  - name: Install mesosphere
-    apt: name=mesosphere state=present
-
-- hosts: slave
-  sudo: yes
-  tasks:
-  - name: Install mesos
-    apt: name=mesos state=present
-
-- hosts: multi
-  sudo: yes
-  tasks:
-  - name: Setup zookeeper connection info for Mesos
-    template:
-      src: "templates/zk"
-      dest: "/etc/mesos/zk"
-      owner: root
-      group: root
-      mode: 0644
-
-- hosts: master
-  sudo: yes
-  tasks:
-    - name: Setup zookeeper server ID
-      template:
-        src: "templates/zk.id"
-        dest: "/etc/zookeeper/conf/myid"
-        owner: root
-        group: root
-        mode: 0644
-
-    - name: Setup zookeeper zoo.cfg
-      template:
-        src: "templates/zoo.cfg"
-        dest: "/etc/zookeeper/conf/zoo.cfg"
-        owner: root
-        group: root
-        mode: 0644
-
-    - name: Setup quorum for mesos-master
-      template:
-        src: "templates/quorum"
-        dest: "/etc/mesos-master/quorum"
-        owner: root
-        group: root
-        mode: 0644
-
-    - name: Setup hostname for mesos-master
-      template:
-        src: "templates/hostname"
-        dest: "/etc/mesos-master/ip"
-        owner: root
-        group: root
-        mode: 0644
-
-    - name: Setup hostname for mesos-master
-      template:
-        src: "templates/hostname"
-        dest: "/etc/mesos-master/hostname"
-        owner: root
-        group: root
-        mode: 0644
-
-    - name: Create directory for marathon configuration
-      file:
-        path: /etc/marathon/conf
-        state: directory
-
-    - name: Copy mesos-master hostnames to marathon configuration
-      command: cp /etc/mesos-master/hostname /etc/marathon/conf/
-
-    - name: Copy mesos-master zookeeper addresses to marathon
-      command: cp /etc/mesos/zk /etc/marathon/conf/master
-
-    - name: Setup zookeeper addresses on marathon
-      template:
-        src: "templates/marathon"
-        dest: "/etc/marathon/conf/zk"
-        owner: root
-        group: root
-        mode: 0644
-
-    - name: Stop mesos-slave jobs on master
-      service:
-        name: mesos-slave
-        state: stopped
-        enabled: false
-
-    - name: Restart zookeeper
-      service:
-        name: zookeeper
-        enabled: true
-        state: restarted
-
-    - name: Restart mesos-master
-      service:
-        name: mesos-master
-        enabled: true
-        state: restarted
-
-    - name: Restart marathon
-      service:
-        name: marathon
-        enabled: true
-        state: restarted
-
-- hosts: slave
-  sudo: yes
-  tasks:
-    - name: Stop and disable zookeeper in slave nodes
-      service:
-        name: zookeeper
-        enabled: false
-        state: stopped
-
-    - name: Stop and disable mesos-master in slave nodes
-      service:
-        name: mesos-master
-        enabled: false
-        state: stopped
-
-    - name: Setup ip for mesos-slave
-      template:
-        src: "templates/hostname"
-        dest: "/etc/mesos-slave/ip"
-        owner: root
-        group: root
-        mode: 0644
-
-    - name: Setup hostname for mesos-slave
-      template:
-        src: "templates/hostname"
-        dest: "/etc/mesos-slave/hostname"
-        owner: root
-        group: root
-        mode: 0644
-
-    - name: Start and enable mesos-slave in slave nodes
-      service:
-        name: mesos-slave
-        enabled: true
-        state: restarted
+    - inclue: tasks/common.yml
+    - inclue: tasks/master.yml
+    - inclue: tasks/slave.yml
