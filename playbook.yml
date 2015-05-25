@@ -2,22 +2,29 @@
 # file: Top level playbook, playbook.yml
 
 # Start of the playbook after the minus sign
--
+- hosts: multi
+  sudo: yes
   pre_tasks:
-    - hosts: multi
-      sudo: yes
-      tasks:
-      - name: Add mesosphere deb repository keys
-        apt_key: keyserver=keyserver.ubuntu.com id=E56151BF
+    - name: Add mesosphere deb repository keys
+      apt_key: keyserver=keyserver.ubuntu.com id=E56151BF
 
-      - name: Install mesosphere deb repository
-        apt_repository: repo="deb http://repos.mesosphere.io/ubuntu trusty main" state=present
+    - name: Install mesosphere deb repository
+      apt_repository: repo="deb http://repos.mesosphere.io/ubuntu trusty main" state=present
 
-      - name: Update repository cache
-        apt: update_cache=yes cache_valid_time=3600
-          include: tasks/common.yml
+    - name: Update repository cache
+      apt: update_cache=yes cache_valid_time=3600
 
+- hosts: master
+  sudo: yes
   tasks:
-    - inclue: tasks/common.yml
-    - inclue: tasks/master.yml
-    - inclue: tasks/slave.yml
+    - include: tasks/master.yml
+
+- hosts: slave
+  sudo: yes
+  tasks:
+    - include: tasks/slave.yml
+
+- hosts: multi
+  sudo: yes
+  tasks:
+    - include: tasks/common.yml
