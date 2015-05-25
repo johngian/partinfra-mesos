@@ -30,9 +30,4 @@
     owner: root
     group: root
     mode: 0644
-
-- name: Start and enable mesos-slave in slave nodes
-  service:
-    name: mesos-slave
-    enabled: true
-    state: restarted
+  notify: restart mesos-slave

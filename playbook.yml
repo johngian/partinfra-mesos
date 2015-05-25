@@ -16,15 +16,21 @@
 
 - hosts: master
   sudo: yes
+  handlers:
+    - include: handlers/handlers.yml
   tasks:
     - include: tasks/master.yml
 
 - hosts: slave
   sudo: yes
+  handlers:
+    - include: handlers/handlers.yml
   tasks:
     - include: tasks/slave.yml
 
 - hosts: multi
   sudo: yes
+  handlers:
+    - include: handlers/handlers.yml
   tasks:
     - include: tasks/common.yml
