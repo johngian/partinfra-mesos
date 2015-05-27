@@ -61,9 +61,16 @@
     owner: root
     group: root
     mode: 0644
+
+- name: Increase marathon executor timeout
+  template:
+    src: "templates/marathon_task_launch_timeout"
+    dest: "/etc/marathon/conf/task_launch_timeout"
+    owner: root
+    group: root
+    mode: 0644
   notify:
     - stop mesos-slave
     - restart zookeeper
     - restart mesos-master
     - restart marathon
-
