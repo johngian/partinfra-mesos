@@ -1,9 +1,0 @@
----
-# file: common.yml
-- name: Setup zookeeper connection info for Mesos
-  template:
-    src: "templates/zk"
-    dest: "/etc/mesos/zk"
-    owner: root
-    group: root
-    mode: 0644
