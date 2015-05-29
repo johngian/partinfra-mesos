@@ -1,5 +1,5 @@
 ---
-# tasks file for slave
+# file: slave.yml
 - name: Install mesos
   apt: name=mesos state=present
 
@@ -20,33 +20,33 @@
 
 - name: Setup ip for mesos-slave
   template:
-    src=hostname.j2
-    dest=/etc/mesos-slave/ip
-    owner=root
-    group=root
-    mode=0644
+    src: "templates/hostname"
+    dest: "/etc/mesos-slave/ip"
+    owner: root
+    group: root
+    mode: 0644
 
 - name: Setup hostname for mesos-slave
   template:
-    src=hostname.j2
-    dest=/etc/mesos-slave/hostname
-    owner=root
-    group=root
-    mode=0644
+    src: "templates/hostname"
+    dest: "/etc/mesos-slave/hostname"
+    owner: root
+    group: root
+    mode: 0644
 
 - name: Enable docker containerizer
   template:
-    src=containerizers.j2
-    dest=/etc/mesos-slave/containerizers
-    owner=root
-    group=root
-    mode=0644
+    src: "templates/containerizers"
+    dest: "/etc/mesos-slave/containerizers"
+    owner: root
+    group: root
+    mode: 0644
 
 - name: Increase mesos-slave executor timeout (delay when pulling docker slave)
   template:
-    src=executor_registration_timeout.j2
-    dest=/etc/mesos-slave/executor_registration_timeout
-    owner=root
-    group=root
-    mode=0644
+    src: "templates/executor_registration_timeout"
+    dest: "/etc/mesos-slave/executor_registration_timeout"
+    owner: root
+    group: root
+    mode: 0644
   notify: restart mesos-slave

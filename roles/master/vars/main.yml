@@ -1,4 +1,0 @@
----
-# vars file for master
-quorum: 2
-task_launch_timeout: 300000
