@@ -1,0 +1,76 @@
+---
+# file: master.yml
+- name: Install mesosphere
+  apt: name=mesosphere state=present
+
+- name: Setup zookeeper server ID
+  template:
+    src: "templates/zk.id"
+    dest: "/etc/zookeeper/conf/myid"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Setup zookeeper zoo.cfg
+  template:
+    src: "templates/zoo.cfg"
+    dest: "/etc/zookeeper/conf/zoo.cfg"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Setup quorum for mesos-master
+  template:
+    src: "templates/quorum"
+    dest: "/etc/mesos-master/quorum"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Setup ip for mesos-master
+  template:
+    src: "templates/hostname"
+    dest: "/etc/mesos-master/ip"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Setup hostname for mesos-master
+  template:
+    src: "templates/hostname"
+    dest: "/etc/mesos-master/hostname"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Create directory for marathon configuration
+  file:
+    path: /etc/marathon/conf
+    state: directory
+
+- name: Copy mesos-master hostnames to marathon configuration
+  command: cp /etc/mesos-master/hostname /etc/marathon/conf/
+
+- name: Copy mesos-master zookeeper addresses to marathon
+  command: cp /etc/mesos/zk /etc/marathon/conf/master
+
+- name: Setup zookeeper addresses on marathon
+  template:
+    src: "templates/marathon"
+    dest: "/etc/marathon/conf/zk"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Increase marathon executor timeout
+  template:
+    src: "templates/marathon_task_launch_timeout"
+    dest: "/etc/marathon/conf/task_launch_timeout"
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - stop mesos-slave
+    - restart zookeeper
+    - restart mesos-master
+    - restart marathon

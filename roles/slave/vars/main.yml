@@ -1,3 +1,0 @@
----
-# vars file for slave
-mesos_slave_containerizers: docker,mesos
