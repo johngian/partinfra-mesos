@@ -1,0 +1,9 @@
+---
+# tasks file for initial-setup
+- name: Setup zookeeper connection info for Mesos
+  template:
+    src=zk.j2
+    dest=/etc/mesos/zk
+    owner=root
+    group=root
+    mode=0644

@@ -1,16 +1,5 @@
 ---
-- name: restart mesos-slave
-  service:
-    name: mesos-slave
-    enabled: true
-    state: restarted
-
-- name: stop mesos-slave
-  service:
-    name: mesos-slave
-    state: stopped
-    enabled: false
-
+# handlers file for master
 - name: restart zookeeper
   service:
     name: zookeeper
