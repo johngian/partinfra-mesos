@@ -29,7 +29,7 @@
 
 - name: Setup ip for mesos-master
   template:
-    src=hostname.j2
+    src=ip.j2
     dest=/etc/mesos-master/ip
     owner=root
     group=root

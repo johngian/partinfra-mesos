@@ -20,7 +20,7 @@
 
 - name: Setup ip for mesos-slave
   template:
-    src=hostname.j2
+    src=ip.j2
     dest=/etc/mesos-slave/ip
     owner=root
     group=root

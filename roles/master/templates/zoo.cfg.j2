@@ -24,7 +24,7 @@ clientPort=2181
 #server.3=zookeeper3:2888:3888
 
 {% for host in groups['master'] %}
-{% set ip = hostvars[host].ansible_ssh_host %}
+{% set ip = hostvars[host].ansible_default_ipv4['address'] %}
 {% set server_id = hostvars[host].server_id %}
 server.{{ server_id }}={{ ip }}:2888:3888
 {% endfor %}
