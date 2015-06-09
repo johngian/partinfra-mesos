@@ -25,6 +25,8 @@
     owner=root
     group=root
     mode=0644
+  notify:
+    - restart mesos-slave
 
 - name: Setup hostname for mesos-slave
   template:
@@ -33,6 +35,8 @@
     owner=root
     group=root
     mode=0644
+  notify:
+    - restart mesos-slave
 
 - name: Enable docker containerizer
   template:
@@ -41,6 +45,8 @@
     owner=root
     group=root
     mode=0644
+  notify:
+    - restart mesos-slave
 
 - name: Increase mesos-slave executor timeout (delay when pulling docker slave)
   template:
@@ -49,4 +55,5 @@
     owner=root
     group=root
     mode=0644
-  notify: restart mesos-slave
+  notify:
+    - restart mesos-slave
