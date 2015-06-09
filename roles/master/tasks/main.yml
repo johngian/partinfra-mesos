@@ -3,6 +3,12 @@
 - name: Install mesosphere
   apt: name=mesosphere state=present
 
+- name: Stop and disable mesos-slave in master nodes
+  service:
+    name: mesos-slave
+    enabled: false
+    state: stopped
+
 - name: Setup zookeeper server ID
   template:
     src=zk.id.j2
