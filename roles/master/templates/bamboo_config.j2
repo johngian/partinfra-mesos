@@ -4,7 +4,7 @@
   },
 
   "Bamboo": {
-    "Host": "http://{{ ansible_default_ipv4['address'] }}:8000",
+    "Endpoint": "http://{{ ansible_default_ipv4['address'] }}:8000",
     "Zookeeper": {
       "Host": "{% for host in groups['master'] %}{{ hostvars[host].ansible_default_ipv4['address'] }}:2181{% if not loop.last %},{% endif %}{% endfor %}",
       "Path": "/marathon-haproxy/state",
