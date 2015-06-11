@@ -95,3 +95,13 @@
     mode=0644
   notify:
     - restart marathon
+
+- name: Enable HTTP callbacks in marathon
+  template:
+    src=event_subscriber.j2
+    dest=/etc/marathon/conf/event_subscriber
+    owner=root
+    group=root
+    mode=0644
+  notify:
+    - restart marathon
