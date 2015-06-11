@@ -66,13 +66,23 @@
   notify:
     - restart marathon
 
-- name: Copy mesos-master hostnames to marathon configuration
-  command: cp /etc/mesos-master/hostname /etc/marathon/conf/
+- name: Configure hostname for marathon configuration
+  template:
+    src=hostname.j2
+    dest=/etc/marathon/conf/hostname
+    owner=root
+    group=root
+    mode=0644
   notify:
     - restart marathon
 
-- name: Copy mesos-master zookeeper addresses to marathon
-  command: cp /etc/mesos/zk /etc/marathon/conf/master
+- name: Configure zookeeper addresses to marathon
+  template:
+    src=zk.j2
+    dest=/etc/marathon/conf/master
+    owner=root
+    group=root
+    mode=0644
   notify:
     - restart marathon
 
