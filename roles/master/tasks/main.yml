@@ -1,7 +1,7 @@
 ---
 # tasks file for master
-- name: Install mesosphere
-  apt: name=mesosphere state=present
+
+- include: dependencies.yml
 
 - name: Stop and disable mesos-slave in master nodes
   service:
@@ -105,3 +105,36 @@
     mode=0644
   notify:
     - restart marathon
+
+- name: Make sure haproxy /var/run/haproxy folder exists
+  file:
+    path: /var/run/haproxy
+    state: directory
+
+- name: Set GOPATH for all users
+  template:
+    src=go-path.j2
+    dest=/etc/profile.d/go-path.sh
+    owner=root
+    group=root
+    mode=0755
+
+- name: Add bamboo config .json
+  template:
+    src=bamboo_config.j2
+    dest=/var/bamboo/production.json
+    owner=root
+    group=root
+    mode=0644
+  notify:
+    - restart bamboo
+
+- name: Configure haproxy template used by bamboo
+  copy:
+    src=haproxy_template.cfg
+    dest=/var/bamboo/haproxy_template.cfg
+    owner=root
+    group=root
+    mode=0644
+  notify:
+    - restart bamboo

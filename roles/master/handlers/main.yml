@@ -17,3 +17,9 @@
     name: marathon
     enabled: true
     state: restarted
+
+- name: restart bamboo
+  service:
+    name: bamboo-server
+    enabled: true
+    state: restarted

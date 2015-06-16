@@ -2,3 +2,5 @@
 # vars file for master
 quorum: 2
 task_launch_timeout: 300000
+bamboo_release: 'v0.2.12'
+gopath: '/usr/share/go'

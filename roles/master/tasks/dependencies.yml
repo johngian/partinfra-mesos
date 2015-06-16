@@ -1,0 +1,37 @@
+---
+# Install packages required for master
+- name: Install mesosphere
+  apt: name=mesosphere state=present
+
+- name: Install bamboo requirements
+  apt: name={{ item }} state=present
+  with_items:
+    - git
+    - ruby-all-dev
+    - build-essential
+    - golang
+    - haproxy
+
+- name: Install fpm using ruby gems
+  command: gem install fpm
+
+- name: Fetch bamboo version {{ bamboo_release }} release from github
+  git:
+    repo= https://github.com/QubitProducts/bamboo.git
+    dest= /tmp/bamboo
+    version= {{ bamboo_release }}
+
+- name: Build bamboo from source
+  environment:
+    GOPATH: "{{ gopath }}"
+  shell: go build bamboo.go
+  args:
+    chdir: /tmp/bamboo
+
+- name: Build bamboo .deb package
+  shell: ./builder/build.sh
+  args:
+    chdir: /tmp/bamboo
+
+- name: Install bamboo .deb
+  apt: deb="/tmp/bamboo/builder/bamboo_1.0.0-1_all.deb"
