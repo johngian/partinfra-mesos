@@ -17,9 +17,16 @@
 
 - name: Fetch bamboo version {{ bamboo_release }} release from github
   git:
-    repo= https://github.com/QubitProducts/bamboo.git
-    dest= /tmp/bamboo
-    version= {{ bamboo_release }}
+    repo=https://github.com/QubitProducts/bamboo.git
+    dest=/tmp/bamboo
+    version={{ bamboo_release }}
+
+- name: Get bamboo dependencies
+  environment:
+    GOPATH: "{{ gopath }}"
+  shell: go get -d
+  args:
+    chdir: /tmp/bamboo
 
 - name: Build bamboo from source
   environment:
