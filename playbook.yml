@@ -14,6 +14,15 @@
     - name: Update repository cache
       apt: update_cache=yes cache_valid_time=3600
 
+- hosts: master
+  sudo: yes
+  pre_tasks:
+    - name: Install java 8 repository
+      apt_repository: repo="ppa:webupd8team/java"
+
+    - name: Update repository cache
+      apt: update_cache=yes cache_valid_time=3600
+
 - hosts: slave
   sudo: yes
   pre_tasks:

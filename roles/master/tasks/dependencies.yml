@@ -1,5 +1,14 @@
 ---
 # Install packages required for master
+- name: Auto accept oracle jdk license
+  shell: echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections
+
+- name: Install Java 8
+  apt: name={{ item }} state=present
+  with_items:
+    - oracle-java8-installer
+    - oracle-java8-set-default
+
 - name: Install mesosphere
   apt: name=mesosphere state=present
 
