@@ -13,6 +13,7 @@
   apt: name=mesosphere state=present
 
 - name: Install bamboo requirements
+  tags: bamboo
   apt: name={{ item }} state=present
   with_items:
     - git
@@ -22,15 +23,18 @@
     - haproxy
 
 - name: Install fpm using ruby gems
+  tags: bamboo
   command: gem install fpm
 
 - name: Fetch bamboo version {{ bamboo_release }} release from github
+  tags: bamboo
   git:
     repo=https://github.com/QubitProducts/bamboo.git
     dest=/tmp/bamboo
     version={{ bamboo_release }}
 
 - name: Get bamboo dependencies
+  tags: bamboo
   environment:
     GOPATH: "{{ gopath }}"
   shell: go get -d
@@ -38,6 +42,7 @@
     chdir: /tmp/bamboo
 
 - name: Build bamboo from source
+  tags: bamboo
   environment:
     GOPATH: "{{ gopath }}"
   shell: go build bamboo.go
@@ -45,9 +50,11 @@
     chdir: /tmp/bamboo
 
 - name: Build bamboo .deb package
+  tags: bamboo
   shell: ./builder/build.sh
   args:
     chdir: /tmp/bamboo
 
 - name: Install bamboo .deb
-  apt: deb="/tmp/bamboo/builder/bamboo_1.0.0-1_all.deb"
+  tags: bamboo
+  apt: deb="/tmp/bamboo/output/bamboo_1.0.0-1_all.deb"
