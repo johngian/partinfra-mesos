@@ -140,7 +140,7 @@
     - restart bamboo
 
 - name: Configure haproxy template used by bamboo
-  copy:
+  template:
     src=haproxy_template.cfg
     dest=/var/bamboo/haproxy_template.cfg
     owner=root
