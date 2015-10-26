@@ -3,23 +3,23 @@
 - name: restart zookeeper
   service:
     name: zookeeper
-    enabled: true
+    enabled: yes
     state: restarted
 
 - name: restart mesos-master
   service:
     name: mesos-master
-    enabled: true
+    enabled: yes
     state: restarted
 
 - name: restart marathon
   service:
     name: marathon
-    enabled: true
+    enabled: yes
     state: restarted
 
 - name: restart bamboo
   service:
     name: bamboo-server
-    enabled: true
+    enabled: yes
     state: restarted

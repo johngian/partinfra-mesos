@@ -9,13 +9,13 @@
 - name: Stop and disable zookeeper in slave nodes
   service:
     name: zookeeper
-    enabled: false
+    enabled: no
     state: stopped
 
 - name: Stop and disable mesos-master in slave nodes
   service:
     name: mesos-master
-    enabled: false
+    enabled: no
     state: stopped
 
 - name: Setup ip for mesos-slave

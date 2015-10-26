@@ -6,7 +6,7 @@
 - name: Stop and disable mesos-slave in master nodes
   service:
     name: mesos-slave
-    enabled: false
+    enabled: no
     state: stopped
 
 - name: Setup zookeeper server ID
