@@ -17,6 +17,9 @@
 - hosts: master
   sudo: yes
   pre_tasks:
+    - name: Enable haproxy ppa
+      apt_repository: repo="ppa:vbernat/haproxy-1.5" state=present
+
     - name: Install java 8 repository
       apt_repository: repo="ppa:webupd8team/java"
 
