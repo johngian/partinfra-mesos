@@ -138,6 +138,7 @@
     mode=0644
   notify:
     - restart bamboo
+    - restart haproxy
 
 - name: Configure haproxy template used by bamboo
   template:
@@ -148,3 +149,4 @@
     mode=0644
   notify:
     - restart bamboo
+    - restart haproxy

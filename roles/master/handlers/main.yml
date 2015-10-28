@@ -23,3 +23,9 @@
     name: bamboo-server
     enabled: yes
     state: restarted
+
+- name: restart haproxy
+  service:
+    name: haproxy
+    enabled: yes
+    state: restarted
