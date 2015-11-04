@@ -32,3 +32,4 @@ If all tasks are completed succesfully you can visit the following web services:
   * **Local IPs**: 192.168.60.4, 192.168.60.5, 192.168.60.6
   * **Port 5050**: Mesos web interface
   * **Port 8080**: Marathon web interface
+  * **Port 8000**: Bamboo web interface
