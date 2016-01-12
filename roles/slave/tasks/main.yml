@@ -3,8 +3,11 @@
 - name: Install mesos
   apt: name=mesos state=present
 
-- name: Install docker
-  apt: name=lxc-docker state=present
+- name: Remove legacy docker package
+  apt: name=lxc-docker state=absent purge=yes
+
+- name: Install docker engine
+  apt: name=docker-engine state=present
 
 - name: Stop and disable zookeeper in slave nodes
   service:
