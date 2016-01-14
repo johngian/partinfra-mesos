@@ -60,3 +60,17 @@
     mode=0644
   notify:
     - restart mesos-slave
+
+- name: Periodically delete stopped docker containers
+  cron:
+    name='Remove stopped containers'
+    special_time='daily'
+    job='docker ps -aq --no-trunc -f status=exited | xargs docker rm'
+    user='root'
+
+- name: Periodically delete dangling docker images
+  cron:
+    name='Remove dangling images'
+    special_time='daily'
+    job='docker images -q -f dangling=true | xargs docker rmi'
+    user='root'
