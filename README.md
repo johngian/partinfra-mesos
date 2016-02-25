@@ -1,4 +1,8 @@
 # Participation infrastructure
+## Attention!
+
+Main repository moved to [mozilla/partinfra-playbooks](https://github.com/mozilla/partinfra-playbooks).
+
 ## Mesos cluster
 
 This ansible role tracks our effort to build a Mesos cluster in order to facililate [**Participation Infrastructure
